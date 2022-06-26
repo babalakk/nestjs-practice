@@ -1,0 +1,50 @@
+<html>
+<button onclick="location.href='/'" type="button">back</button>
+<div>
+    <div style="border: 1px solid;margin: 20px;padding: 20px">
+        <span>sign up by email</span>
+        <form>
+            <input type="text" name="email" id="email" placeholder="email" />
+            <input type="password" name="password" id="password" placeholder="password" />
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="confirm password" />
+            <button type="button" onclick='create_user();'>sign up</button>
+        </form>
+        <span id='message'></span><br>
+    </div>
+    <div style="border: 1px solid;margin: 20px;padding: 20px">
+        <span>sign up by social account </span>
+        <button  onclick="location.href='/login'" type="button">link</button>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function create_user() {
+
+        var formData = {
+            email: $("#email").val(),
+            password: $("#password").val(),
+            confirm_password: $("#confirm_password").val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/user/create",
+            data: JSON.stringify(formData),
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                var now = new Date();
+                var time = now.getTime();
+                var expireTime = time + 1000*36000;
+                now.setTime(expireTime)
+                document.cookie = 'token='+response+';expires='+now.toUTCString()+';path=/';
+                window.location.replace("/dashboard");
+            },
+            error: function (thrownError) {
+                console.log(thrownError);
+            }
+        });
+    }
+</script>
+
+</html>

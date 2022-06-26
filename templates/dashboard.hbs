@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    {{> user_header }}
+    <h1>Dashboard</h1>
+    <span id="message">{{ message }}</span>
+
+    <div style="border: 1px solid;margin: 20px;padding: 20px">
+        <span>reset password</span>
+        <form metho="post">
+            <input type="text" id="origin_password" placeholder="origin_password">
+            <input type="password" id="new_password" placeholder="new_password">
+            <input type="password" id="confirm_new_password" placeholder="confirm_new_password">
+            <button type="button" onclick="reset_password();">submit</button>
+        </form>
+    </div>
+
+    <div style="border: 1px solid;margin: 20px;padding: 20px">
+        <span>user statistics</span><br>
+        <span>total signup: </span><span id="total_signup"></span><br>
+        <span>active today: </span><span id="active_today"></span><br>
+        <span>active sessions last 7 days: </span><span id="active_seven_day"></span><br>
+    </div>
+
+    <div style="border: 1px solid;margin: 20px;padding: 20px">
+        <span>all user</span>
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>LoginCount</th>
+                <th>CreatedAt</th>
+                <th>LastSession</th>
+            </thead>
+            <tbody id="all_user">
+            </tbody>
+        </table>
+    </div>
+
+
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function reset_password() {
+        var formData = {
+            origin_password: $("#origin_password").val(),
+            new_password: $("#new_password").val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/user/reset_password",
+            data: JSON.stringify(formData),
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                document.getElementById("message").innerHTML = "reset password success";
+            },
+            error: function (thrownError) {
+                var message = thrownError.responseJSON.message;
+                document.getElementById("message").innerHTML = message;
+            }
+        });
+    }
+
+    function get_statistics() {
+        $.ajax({
+            type: "GET",
+            url: "/user/statistics",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                document.getElementById("total_signup").innerHTML = response.total_signup;
+                document.getElementById("active_today").innerHTML = response.active_today;
+                document.getElementById("active_seven_day").innerHTML = response.active_seven_day;
+            },
+            error: function (thrownError) {
+                console.log(thrownError);
+            }
+        });
+    }
+
+    function get_all_user() {
+        $.ajax({
+            type: "GET",
+            url: "/user/all_user",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                for(let i = 0; i < response.length; i++){ 
+                    $("#all_user").append("<tr>"+
+                    "<th>"+response[i].id+"</th>"+
+                    "<th>"+response[i].name+"</th>"+
+                    "<th>"+response[i].email+"</th>"+
+                    "<th>"+response[i].login_count+"</th>"+
+                    "<th>"+response[i].created_at+"</th>"+
+                    "<th>"+response[i].last_session+"</th>"+
+                "</tr>");
+                }
+            },
+            error: function (thrownError) {
+                console.log(thrownError);
+            }
+        });
+    }
+
+    window.onload = function() {
+        get_statistics();
+        get_all_user();
+    };
+</script>
+
+</html>

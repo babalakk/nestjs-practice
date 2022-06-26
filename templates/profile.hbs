@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  {{> user_header }}
+  <h1>Profile</h1>
+  <span>email: </span><span id="email"></span><br>
+  <span>name: </span><span id="name"></span><br>
+  <form method="post">
+    <input type="text" id="new_name" placeholder="new_name">
+    <button type="button" onclick="update_name();">update name</button>
+  </form>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+  function get_profile() {
+    $.ajax({
+      type: "GET",
+      url: "/user/profile",
+      contentType: "application/json; charset=utf-8",
+      success: function (response) {
+        $("#name").html(response.name);
+        $("#email").html(response.email);
+      },
+      error: function (thrownError) {
+        console.log(thrownError);
+      }
+    });
+  }
+
+  function update_name() {
+    var formData = {
+      new_name: $("#new_name").val(),
+    };
+    $.ajax({
+      type: "POST",
+      url: "/user/update_name",
+      data: JSON.stringify(formData),
+      contentType: "application/json; charset=utf-8",
+      success: function (response) {
+        $("#name").html(response.name);
+      },
+      error: function (thrownError) {
+        console.log(thrownError);
+      }
+    });
+  }
+
+  window.onload = function () {
+    get_profile();
+  };
+</script>
+
+</html>

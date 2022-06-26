@@ -1,0 +1,26 @@
+<html>
+<div>
+    <span>Verify your email</span><br>
+    <button  onclick="send_email();" type="button">send email</button><br>
+    <span id="message">{{ message }}</span>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+<script type="text/javascript">
+    function send_email() {
+        $.ajax({
+            type: "POST",
+            url: "/user/send_verify_email",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                document.getElementById("message").innerHTML = response;
+            },
+            error: function (thrownError) {
+                var message = thrownError.responseJSON.message;
+                document.getElementById("message").innerHTML = message;
+            }
+        });
+    }
+</script>
+
+</html>
