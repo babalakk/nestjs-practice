@@ -35,8 +35,11 @@ function get_db_options() {
       type: 'postgres',
       synchronize: false,
       logging: false,
+      ssl: true,
       extra: {
-        ssl: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       },
       entities: ['dist/entity/*.*'],
     };
