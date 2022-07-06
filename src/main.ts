@@ -32,7 +32,7 @@ async function bootstrap() {
     authRequired: false,
     auth0Logout: true,
     secret: process.env.AUTH0_SECRET,
-    baseURL: 'https://'+ domain + ':' + port,
+    baseURL: 'https://'+ domain,
     clientID: process.env.AUTH0_CLIENT_ID,
     issuerBaseURL: process.env.AUTH0_ISSUER_URL,
   };
