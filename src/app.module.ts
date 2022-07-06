@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './user/user.entity';
-import { AuthEntity } from './social/auth.entity';
 import { AuthModule } from './auth/auth.module';
 import { UserController } from './user/user.controller';
 import { WebController } from './web/web.controller';
@@ -16,14 +13,13 @@ import * as dotenv from 'dotenv';
 @Module({
   imports: [
     TypeOrmModule.forRoot(get_db_options()),
-    TypeOrmModule.forFeature([UserEntity]),
     UserModule,
     SocialModule,
     AuthModule,
     MailModule,
   ],
   controllers: [UserController, WebController],
-  providers: [AppService, MailService],
+  providers: [MailService],
 })
 export class AppModule {}
 
@@ -45,17 +41,7 @@ function get_db_options() {
     };
     Object.assign(connectionOptions, { url: process.env.DATABASE_URL });
   } else {
-    const domain = process.env.DOMAIN ? process.env.DOMAIN : 'localhost';
-    connectionOptions = {
-      type: 'mysql',
-      host: domain,
-      port: 3306,
-      username: process.env.MYSQL_USER_NAME,
-      password: process.env.MYSQL_PASSWORD,
-      database: 'test',
-      entities: [UserEntity, AuthEntity],
-      synchronize: true,
-    };
+    throw new Error('env DATABASE_URL must be specified');
   }
   return connectionOptions;
 }
