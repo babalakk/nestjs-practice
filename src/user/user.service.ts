@@ -159,14 +159,31 @@ export class UserService {
   }
 
   private validate_password(password: string) {
-    const validators = [
-      /[a-z]/g.test(password),
-      /[A-Z]/g.test(password),
-      /\d/.test(password),
-      /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password),
-      password.length >= 8,
+    const rules = [
+      [
+        /[a-z]/g.test(password),
+        'password must contains at least one lower character',
+      ],
+      [
+        /[A-Z]/g.test(password),
+        'password must contains at least one upper character',
+      ],
+      [
+        /\d/.test(password),
+        'password must contains at least one digit character',
+      ],
+      [
+        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password),
+        'password must contains at least one special character',
+      ],
+      [password.length >= 8, 'password must contains at least 8 characters'],
     ];
-    return validators.every((v) => v === true);
+    for (const rule of rules) {
+      if (rule[0] !== true) {
+        throw new HttpException({ message: rule[1] }, HttpStatus.BAD_REQUEST);
+      }
+    }
+    return true;
   }
 
   private async exist_email(email: string) {

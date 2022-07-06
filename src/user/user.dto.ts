@@ -15,4 +15,5 @@ export class UpdateUserNameDto {
 export class ResetPasswordDto {
   origin_password: string;
   new_password: string;
+  confirm_password: string;
 }

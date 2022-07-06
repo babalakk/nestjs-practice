@@ -37,6 +37,12 @@ export class UserController {
 
   @Post('create')
   async create(@Body() dto: CreateUserDto) {
+    if (dto.password != dto.confirm_password) {
+      throw new HttpException(
+        { message: 'password must be identical to confirm_password' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const user = await this.service.create('user', dto.email, dto.password);
     const token = await this.service.generate_jwt(user);
     return token;
@@ -58,6 +64,12 @@ export class UserController {
 
   @Post('reset_password')
   async reset_password(@Req() req: any, @Body() dto: ResetPasswordDto) {
+    if (dto.new_password != dto.confirm_password) {
+      throw new HttpException(
+        { message: 'new password must be identical to confirm_password' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const user = await this.service.reset_password(
       req.user_id,
       dto.origin_password,
