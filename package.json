@@ -15,7 +15,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node build/main",
+    "start:prod": "node build/src/main",
     "lint": "gts lint",
     "test": "jest",
     "test:watch": "jest --watch",
