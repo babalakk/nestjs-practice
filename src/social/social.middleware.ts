@@ -31,11 +31,14 @@ export class SocialMiddleware implements NestMiddleware {
         });
 
         if (auth === null) {
-          const new_user = new UserEntity();
-          new_user.name = social_user.nickname;
-          new_user.email = social_user.email;
-          new_user.verified = true;
-          await this.userRepository.save(new_user);
+          let user = await this.userRepository.findOneBy({email: social_user.email});
+          if (user === null) {
+            user =  new UserEntity();
+            user.name = social_user.nickname;
+            user.email = social_user.email;
+            user.verified = true;
+            await this.userRepository.save(user);
+          }
 
           auth = new AuthEntity();
           auth.email = social_user.email;
@@ -43,7 +46,7 @@ export class SocialMiddleware implements NestMiddleware {
           auth.picture = social_user.picture;
           auth.social_provider = social_provider;
           auth.social_id = social_id;
-          auth.user = new_user;
+          auth.user = user;
           await this.authRepository.save(auth);
         }
         const jwt = await this.userService.generate_jwt(auth.user);
