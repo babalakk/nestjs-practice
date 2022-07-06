@@ -152,7 +152,6 @@ export class UserService {
   }
 
   private validate_password(password: string) {
-    return true;
     const validators = [
       /[a-z]/g.test(password),
       /[A-Z]/g.test(password),

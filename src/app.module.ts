@@ -33,7 +33,7 @@ function get_db_options() {
   if (process.env.DATABASE_URL) {
     connectionOptions = {
       type: 'postgres',
-      synchronize: false,
+      synchronize: true,
       logging: false,
       ssl: true,
       extra: {
@@ -41,7 +41,7 @@ function get_db_options() {
           rejectUnauthorized: false,
         },
       },
-      entities: ['dist/entity/*.*'],
+      entities: [__dirname + '/../dist/**/*.entity.js'],
     };
     Object.assign(connectionOptions, { url: process.env.DATABASE_URL });
   } else {
