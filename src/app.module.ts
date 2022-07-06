@@ -45,9 +45,10 @@ function get_db_options() {
     };
     Object.assign(connectionOptions, { url: process.env.DATABASE_URL });
   } else {
+    const domain = process.env.DOMAIN ? process.env.DOMAIN : 'localhost';
     connectionOptions = {
       type: 'mysql',
-      host: 'localhost',
+      host: domain,
       port: 3306,
       username: process.env.MYSQL_USER_NAME,
       password: process.env.MYSQL_PASSWORD,
