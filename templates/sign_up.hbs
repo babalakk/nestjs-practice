@@ -41,7 +41,8 @@
                 window.location.replace("/dashboard");
             },
             error: function (thrownError) {
-                console.log(thrownError);
+                var message = thrownError.responseJSON.message;
+                document.getElementById("message").innerHTML = message;
             }
         });
     }

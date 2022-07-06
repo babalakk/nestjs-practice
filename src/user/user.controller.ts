@@ -8,6 +8,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { env } from 'process';
 import { MailService } from 'src/mail/mail.service';
 import {
   CreateUserDto,
@@ -15,6 +16,7 @@ import {
   ResetPasswordDto,
   UpdateUserNameDto,
 } from './user.dto';
+import * as dotenv from 'dotenv';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -70,11 +72,14 @@ export class UserController {
     const code = this.generate_random_string();
     const user = await this.service.get_by_id(req.user_id);
     await this.service.set_activate_code(user, code);
+    dotenv.config();
+    const domain = process.env.DOMAIN;
+    const activate_link = "https://"+ domain +"/user/activate?code="+code;
     this.mail_service.send(
       user.email,
-      'please click this link to activate your accout: ' + code,
+      'please visit this link to activate your accout: ' + activate_link,
     );
-    return 'email has beed sent';
+    return 'email has beed sent, it may take a few seconds.';
   }
 
   @Get('activate')
