@@ -125,10 +125,12 @@ export class UserService {
     return {
       total_signup: await this.usersRepository.count(),
       active_today: await this.usersRepository.countBy({
-        last_session: Raw((alias) => `DATE(${alias}) = CURDATE()`),
+        last_session: Raw(
+          (alias) => `date_trunc('day', ${alias}) = CURRENT_DATE`,
+        ),
       }),
       active_seven_day: await this.usersRepository.countBy({
-        last_session: Raw((alias) => `${alias} > DATE(NOW() - INTERVAL 7 DAY)`),
+        last_session: Raw((alias) => `${alias} > (CURRENT_DATE - 7)`),
       }),
     };
   }
