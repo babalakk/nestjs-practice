@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Raw } from 'typeorm';
@@ -36,6 +37,9 @@ export class UserService {
 
   async update_name(user_id: number, new_name: string) {
     const user = await this.usersRepository.findOneBy({ id: user_id });
+    if (user === null) {
+      return null;
+    }
     user.name = new_name;
     await this.usersRepository.save(user);
     return { email: user.email, name: user.name };
@@ -77,6 +81,9 @@ export class UserService {
 
   async get_profile(user_id: number) {
     const user = await this.usersRepository.findOneBy({ id: user_id });
+    if (user === null) {
+      return null;
+    }
     return { email: user.email, name: user.name };
   }
 
@@ -164,7 +171,6 @@ export class UserService {
 
   private async exist_email(email: string) {
     const user = await this.usersRepository.findOneBy({ email: email });
-    console.log(user);
     if (user === null) {
       return false;
     }

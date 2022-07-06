@@ -1,10 +1,9 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
+import { UserEntity } from '../user/user.entity';
+import { UserService } from '../user/user.service';
 import { Repository } from 'typeorm';
 import { AuthEntity } from './auth.entity';
-const jwt = require('jsonwebtoken');
 
 @Injectable()
 export class SocialMiddleware implements NestMiddleware {
@@ -23,7 +22,6 @@ export class SocialMiddleware implements NestMiddleware {
     } else {
       const social_user = req.oidc.user;
       if (social_user) {
-        console.log(JSON.stringify(social_user));
         const [social_provider, social_id] = social_user.sub.split('|');
         let auth = await this.authRepository.findOne({
           where: { social_provider: social_provider, social_id: social_id },
@@ -31,9 +29,11 @@ export class SocialMiddleware implements NestMiddleware {
         });
 
         if (auth === null) {
-          let user = await this.userRepository.findOneBy({email: social_user.email});
+          let user = await this.userRepository.findOneBy({
+            email: social_user.email,
+          });
           if (user === null) {
-            user =  new UserEntity();
+            user = new UserEntity();
             user.name = social_user.nickname;
             user.email = social_user.email;
             user.verified = true;

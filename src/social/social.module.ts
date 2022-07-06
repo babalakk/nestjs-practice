@@ -1,9 +1,9 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthEntity } from 'src/social/auth.entity';
-import { UserEntity } from 'src/user/user.entity';
-import { SocialMiddleware } from 'src/social/social.middleware';
-import { UserModule } from 'src/user/user.module';
+import { AuthEntity } from '../social/auth.entity';
+import { UserEntity } from '../user/user.entity';
+import { SocialMiddleware } from '../social/social.middleware';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AuthEntity, UserEntity]), UserModule],

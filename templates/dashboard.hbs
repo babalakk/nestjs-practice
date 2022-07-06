@@ -78,7 +78,8 @@
                 document.getElementById("active_seven_day").innerHTML = response.active_seven_day;
             },
             error: function (thrownError) {
-                console.log(thrownError);
+                var message = thrownError.responseJSON.message;
+                document.getElementById("message").innerHTML = message;
             }
         });
     }
@@ -101,7 +102,8 @@
                 }
             },
             error: function (thrownError) {
-                console.log(thrownError);
+                var message = thrownError.responseJSON.message;
+                document.getElementById("message").innerHTML = message;
             }
         });
     }

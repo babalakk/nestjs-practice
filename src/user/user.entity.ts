@@ -6,7 +6,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
 } from 'typeorm';
-import { AuthEntity } from 'src/social/auth.entity';
+import { AuthEntity } from '../social/auth.entity';
 import * as argon2 from 'argon2';
 
 @Entity('user')
@@ -62,5 +62,3 @@ export class UserEntity {
     }
   }
 }
-
-

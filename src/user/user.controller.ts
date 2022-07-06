@@ -8,8 +8,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { env } from 'process';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 import {
   CreateUserDto,
   LoginUserDto,
@@ -71,21 +70,34 @@ export class UserController {
   async send_verify_email(@Req() req: any) {
     const code = this.generate_random_string();
     const user = await this.service.get_by_id(req.user_id);
+    if (user === null) {
+      throw new HttpException(
+        { message: 'user not found' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     await this.service.set_activate_code(user, code);
     dotenv.config();
     const domain = process.env.DOMAIN;
-    const activate_link = "https://"+ domain +"/user/activate?code="+code;
+    const activate_link = 'https://' + domain + '/user/activate?code=' + code;
     this.mail_service.send(
       user.email,
       'please visit this link to activate your accout: ' + activate_link,
     );
-    return 'email has beed sent, it may take a few seconds.';
+    return 'email has beed sent, it may take a few seconds';
   }
 
   @Get('activate')
-  async activate(@Req() req: any, @Res({ passthrough: true }) res) {
+  async activate(@Req() req: any, @Res({ passthrough: true }) res: any) {
     const code = req.query.code;
     const user = await this.service.get_by_id(req.user_id);
+    if (user === null) {
+      throw new HttpException(
+        { message: 'user not found' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (code === user.activate_code) {
       await this.service.activate(user);
       const jwt = await this.service.generate_jwt(user);

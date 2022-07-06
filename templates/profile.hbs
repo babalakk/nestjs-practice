@@ -10,6 +10,7 @@
     <input type="text" id="new_name" placeholder="new_name">
     <button type="button" onclick="update_name();">update name</button>
   </form>
+  <span id="message">{{ message }}</span>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
@@ -25,7 +26,8 @@
         $("#email").html(response.email);
       },
       error: function (thrownError) {
-        console.log(thrownError);
+        var message = thrownError.responseJSON.message;
+        document.getElementById("message").innerHTML = message;
       }
     });
   }
@@ -43,7 +45,8 @@
         $("#name").html(response.name);
       },
       error: function (thrownError) {
-        console.log(thrownError);
+        var message = thrownError.responseJSON.message;
+        document.getElementById("message").innerHTML = message;
       }
     });
   }
