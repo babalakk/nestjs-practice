@@ -41,7 +41,7 @@ function get_db_options() {
           rejectUnauthorized: false,
         },
       },
-      entities: [__dirname + '/../build/**/*.entity.js'],
+      entities: ['**/*.entity.js'],
     };
     Object.assign(connectionOptions, { url: process.env.DATABASE_URL });
   } else {
