@@ -6,7 +6,7 @@ import {
   BeforeInsert,
   BeforeUpdate,
 } from 'typeorm';
-import { AuthEntity } from '../social/auth.entity';
+import { SocialEntity } from '../social/socail.entity';
 import * as argon2 from 'argon2';
 
 @Entity('user')
@@ -44,10 +44,10 @@ export class UserEntity {
   @Column({ nullable: true })
   activate_code: string;
 
-  @OneToMany(() => AuthEntity, (auth) => auth.user, {
+  @OneToMany(() => SocialEntity, (auth) => auth.user, {
     cascade: true,
   })
-  auths: AuthEntity[];
+  auths: SocialEntity[];
 
   @BeforeInsert()
   async first_create() {

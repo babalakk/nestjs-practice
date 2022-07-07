@@ -1,16 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { IsEmail } from 'class-validator';
 import { UserEntity } from '../user/user.entity';
 
 @Entity('auth')
-export class AuthEntity {
+export class SocialEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
     nullable: true,
   })
-  @IsEmail()
   email: string;
 
   @Column()
